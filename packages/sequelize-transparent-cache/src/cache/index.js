@@ -35,7 +35,7 @@ function saveAll (client, model, instances, customKey) {
   return client.set(key, instances.map(instanceToData)).then(() => instances)
 }
 
-function getAll (client, model, customKey, option) {
+function getAll (client, model, customKey, options) {
   const key = [
     model.name,
     customKey
