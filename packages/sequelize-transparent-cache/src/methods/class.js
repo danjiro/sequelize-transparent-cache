@@ -37,21 +37,23 @@ function buildAutoMethods (client, model) {
   }
 }
 
-function buildManualMethods (client, model, customKey) {
+function buildManualMethods (client, model, customKey, options) {
   return {
     client () {
       return client
     },
     findAll () {
-      return cache.getAll(client, model, customKey)
-        .then(instances => {
-          if (instances) { // any array - cache hit
-            return instances
-          }
+      try {
+        return cache.getAll(client, model, customKey, options)
+          .then(instances => {
+            if (instances) { // any array - cache hit
+              return instances
+            }
 
-          return model.findAll.apply(model, arguments)
-            .then(instances => cache.saveAll(client, model, instances, customKey))
-        })
+            return model.findAll.apply(model, arguments)
+              .then(instances => cache.saveAll(client, model, instances, customKey))
+          });
+      } catch (error) {console.log(error)}
     },
     findOne () {
       return cache.get(client, model, customKey)

@@ -35,14 +35,14 @@ function saveAll (client, model, instances, customKey) {
   return client.set(key, instances.map(instanceToData)).then(() => instances)
 }
 
-function getAll (client, model, customKey) {
+function getAll (client, model, customKey, option) {
   const key = [
     model.name,
     customKey
   ]
 
   return client.get(key).then(dataArray => {
-    if (!dataArray) { // undefined - cache miss
+    if (!dataArray || options.dataToInstance === false) { // undefined - cache miss
       return dataArray
     }
     return dataArray.map(data => dataToInstance(model, data))
